@@ -57,7 +57,7 @@ const char COMMENT_CHAR = '#';
 const char EOF_CHAR = '&';
 
 inline void nextnoncomment (FILE* infile, char* dump, const int &size) 
-{ do {fgets(dump, size, infile);} 
+{ do {char *p_fgets = fgets(dump, size, infile);} 
   while ((!feof(infile)) && (dump[0] == COMMENT_CHAR)); }
 
 
@@ -110,7 +110,7 @@ int main ( int argc, char **argv )
   int MEMORY = 128;  // Our default storage (not used)
   
   char ch;
-  while ((ch = getopt(argc, argv, "hvtm:")) != -1) {
+  while ((ch = (char)getopt(argc, argv, "hvtm:")) != -1) {
     switch (ch) {
     case 'm':
       MEMORY = (int)strtol(optarg, (char**)NULL, 10);
@@ -156,12 +156,12 @@ int main ( int argc, char **argv )
   if (ERROR) exit(ERROR);
 
   // parse that file...
-  char dump[512];
+  char dump[512], *p_fgets;
   double a0, alatt[9];
   int Ngrid[3];
 
   read_CHGCAR_header(infile, dump, a0, alatt);
-  fgets(dump, sizeof(dump), infile);
+  p_fgets = fgets(dump, sizeof(dump), infile);
   sscanf(dump, "%d %d %d", Ngrid, Ngrid+1, Ngrid+2);
 
   if (TESTING) {

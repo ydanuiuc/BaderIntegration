@@ -235,7 +235,7 @@ int main ( int argc, char **argv )
   if (TESTING) fprintf(stderr, "## reading %s\n", infile_name);
 
   // parse that file...
-  char dump[512];
+  char dump[600];
   char comment[512];
   double a0, alatt[9], gridlatt[9], metric[9];
   
