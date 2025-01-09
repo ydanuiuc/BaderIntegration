@@ -25,14 +25,16 @@ CFLAGS ?= -O5
 # have_inline defined for gsl to use extern inline functions when possible:
 CXXFLAGS ?= -O5 -DHAVE_INLINE $(OSDEFS)
 
-TARGET = wsflux
+TARGETS = weight_int wsflux
 
 INCLUDES = *.H
 # INCLUDES = io.H multipoly.H eam.H
 
 .PHONY: all clean archive
 
-all: $(TARGET)
+all: $(TARGETS)
+
+weight_int:	weight_int.C $(INCLUDES)
 
 wslux:	wsflux.C $(INCLUDES)
 

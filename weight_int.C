@@ -154,7 +154,7 @@ int main ( int argc, char **argv )
   char* OUTBASE = NULL;	// basename for output
   
   char ch;
-  while ((ch = getopt(argc, argv, "Vaso:n:hvtm:")) != -1) {
+  while ((ch = (char)getopt(argc, argv, "Vaso:n:hvtm:")) != -1) {
     switch (ch) {
     case 'V':
       VORONOI = 1;
@@ -248,7 +248,7 @@ int main ( int argc, char **argv )
   for (int d=0; d<9; ++d) metric[d] *= a0*a0;
   int Natoms=0;
   for (int nt=0; Natom[nt]>=0; ++nt) Natoms += Natom[nt];
-  fgets(dump, sizeof(dump), infile);
+  char *p_fgets = fgets(dump, sizeof(dump), infile);
   sscanf(dump, "%d %d %d", Ngrid, Ngrid+1, Ngrid+2);
 
   if (TESTING) {
@@ -338,7 +338,7 @@ int main ( int argc, char **argv )
       continue;
     }
     skip_CHGCAR_header(infile);
-    fgets(dump, sizeof(dump), infile);
+    p_fgets = fgets(dump, sizeof(dump), infile);
     int Ntemp[3];
     sscanf(dump, "%d %d %d", Ntemp, Ntemp+1, Ntemp+2);
     if ( (Ngrid[0] != Ntemp[0]) ||
