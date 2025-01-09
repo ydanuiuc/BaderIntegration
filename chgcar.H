@@ -199,10 +199,25 @@ void read_CHGCAR_header(FILE* infile, char* comment, double& a0,
     sscanf(dump, "%lf %lf %lf", latt+i, latt+3+i, latt+6+i);
   }
 
-  //++ number of atoms
+  /*
+  * In VASP 5 or later versions one should see a line of text specifying the element names here
+  * whereas in older versions no such line exists, but atom numbers are written here.
+  * I modified Dallas's original code so that it works with both versions. --Yang
+  */
   fgets(dump, sizeof(dump), infile);
   char *strp, *endp=dump;
   int types = 0, Natoms=0;
+
+  // check to see if this line is a list of element names or atom numbers
+  strp = endp;
+  i = strtol(strp, &endp, 10);
+  if (endp == strp) { // skip the current line and read the next line if we see a list of element names
+    fgets(dump, sizeof(dump), infile);
+  }
+  endp = dump;
+  // Modification ends here. --Yang
+
+  //++ number of atoms
   if (READATOMS && (Natom==NULL)) Natom=new int[128];
   do {
     strp=endp;
@@ -249,13 +264,28 @@ void skip_CHGCAR_header(FILE* infile)
   //++ lattice vectors
   for (int i=0; i<3; ++i) fgets(dump, sizeof(dump), infile);
 
-  //++ number of atoms
+  /*
+  * In VASP 5 or later versions one should see a line of text specifying the element names here
+  * whereas in older versions no such line exists, but atom numbers are written here.
+  * I modified Dallas's original code so that it works with both versions. --Yang
+  */
   fgets(dump, sizeof(dump), infile);
   char *strp, *endp=dump;
   int Natoms=0;
+
+  // check to see if this line is a list of element names or atom numbers
+  strp = endp;
+  int i = strtol(strp, &endp, 10);
+  if (endp == strp) { // skip the current line and read the next line if we see a list of element names
+    fgets(dump, sizeof(dump), infile);
+  }
+  endp = dump;
+  // Modification ends here. --Yang
+
+  //++ number of atoms
   do {
     strp=endp;
-    int i = strtol(strp, &endp, 10);
+    i = strtol(strp, &endp, 10);
     if (strp!=endp) Natoms += i;
   } while (strp!=endp);
 
